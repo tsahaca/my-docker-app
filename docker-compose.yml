@@ -1,0 +1,55 @@
+version: '3'
+services:
+  server:
+    build:
+      context: ./voting-app-server
+    container_name: voting-app-server
+    ports:
+      - "5000:5000"
+    volumes:
+      - server-data:/app/data
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    networks:
+      - voting-app-network
+
+  client:
+    build:
+      context: ./voting-app-client
+    container_name: voting-app-client
+    ports:
+      - "3001:3001"
+    volumes:
+      - client-data:/usr/share/nginx/html
+    networks:
+      - voting-app-network
+
+  redis:
+    image: "redis:alpine"
+    container_name: voting-app-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - voting-app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: voting-app-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - client
+      - server
+    networks:
+      - voting-app-network
+
+networks:
+  voting-app-network:
+    driver: bridge
+
+volumes:
+  server-data:
+  client-data:
