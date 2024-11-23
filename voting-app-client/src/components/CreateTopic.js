@@ -10,11 +10,12 @@ const CreateTopic = () => {
     const [message, setMessage] = useState('');
     const [votingUrl, setVotingUrl] = useState('');
     const navigate = useNavigate();
-
+    const BACKEND_API_PATH=process.env.BACKEND_API_PATH;
+    console.log('Rohan:', BACKEND_API_PATH);
     const createTopic = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/topics', { topic, description });
+            const response = await axios.post(`http://${BACKEND_API_PATH}:5000/api/topics`, { topic, description });
             setVotingUrl(response.data.votingUrl);
             setMessage('Topic created! Copy the voting link below.');
         } catch (error) {
