@@ -8,12 +8,12 @@ const Results = () => {
     const { topic } = useParams();
     const [results, setResults] = useState({ topic: '', votes: { agree: [], notAgree: [] } });
     const [loading, setLoading] = useState(true);
-    const BACKEND_API_PATH=process.env.BACKEND_API_PATH;
+    const BACKEND_API_URL=process.env.REACT_APP_BACKEND_API_URL;
 
     useEffect(() => {
         const fetchResults = async () => {
             try {
-                const response = await axios.get(`http://${BACKEND_API_PATH}:5000/api/topics/${topic}/results`);
+                const response = await axios.get(`http://${BACKEND_API_URL}:5000/api/topics/${topic}/results`);
                 setResults(response.data);
             } catch (error) {
                 console.error('Error fetching results:', error);

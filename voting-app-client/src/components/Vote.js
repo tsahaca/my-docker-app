@@ -11,11 +11,11 @@ const Vote = () => {
     const [message, setMessage] = useState('');
     const [error, setError] = useState(''); // State for error messages
     const navigate = useNavigate();
-    const BACKEND_API_PATH=process.env.BACKEND_API_PATH;
+    const BACKEND_API_URL=process.env.REACT_APP_BACKEND_API_URL;
 
     useEffect(() => {
         const fetchTopic = async () => {
-            const response = await axios.get(`http://${BACKEND_API_PATH}:5000/api/topics/${topic}/vote`);
+            const response = await axios.get(`http://${BACKEND_API_URL}:5000/api/topics/${topic}/vote`);
             setDescription(response.data.description);
         };
         fetchTopic();
@@ -30,7 +30,7 @@ const Vote = () => {
         setError(''); // Clear previous error if name is valid
 
         try {
-            await axios.post(`http://${BACKEND_API_PATH}:5000/api/topics/${topic}/vote`, { vote, name });
+            await axios.post(`http://${BACKEND_API_URL}:5000/api/topics/${topic}/vote`, { vote, name });
             setMessage('Vote counted!');
             setTimeout(() => {
                 navigate(`/results/${topic}`);
