@@ -1,8 +1,7 @@
-// src/components/CreateTopic.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Importing Framer Motion
+import { motion } from 'framer-motion';
 
 const CreateTopic = () => {
     const [topic, setTopic] = useState('');
@@ -10,7 +9,8 @@ const CreateTopic = () => {
     const [message, setMessage] = useState('');
     const [votingUrl, setVotingUrl] = useState('');
     const navigate = useNavigate();
-    const BACKEND_API_URL=process.env.REACT_APP_BACKEND_API_URL;
+    const BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL;
+
     const createTopic = async (e) => {
         e.preventDefault();
         try {
@@ -23,9 +23,26 @@ const CreateTopic = () => {
     };
 
     const copyToClipboard = () => {
-        navigator.clipboard.writeText(votingUrl)
-            .then(() => alert('Link copied to clipboard!'))
-            .catch(err => alert('Failed to copy link: ', err));
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(votingUrl)
+                .then(() => alert('Link copied to clipboard!'))
+                .catch(() => alert('Failed to copy link.'));
+        } else {
+            const textArea = document.createElement('textarea');
+            textArea.value = votingUrl;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert('Link copied to clipboard!');
+            } catch {
+                alert('Failed to copy link.');
+            }
+            document.body.removeChild(textArea);
+        }
     };
 
     return (
